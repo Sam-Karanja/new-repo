@@ -4,7 +4,7 @@ from flask import config
 
 
 class Config:
-    
+    SQLALCHEMY_DATABASE_URI = 'postgresql+psycopg2://moringa:1234@localhost/blogs'
     '''
     contains configurations used in bothe development and production stages
     '''
