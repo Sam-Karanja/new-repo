@@ -1,4 +1,5 @@
 from crypt import methods
+from fileinput import filename
 from os import abort
 from flask import render_template,request,redirect,url_for
 from.import main
@@ -6,8 +7,8 @@ from..request import get_quotes
 from flask_login import login_required
 from ..models import User
 from .forms import UpdateProfile
-from ..import db
-# Views
+from ..import db,photos
+
 
 
 @main.route('/',methods=['GET','POST'])
@@ -23,6 +24,7 @@ def index():
     return render_template('index.html',message=message,quotes=my_quote)
 
 @main.route('/user/<uname>')
+@login_required
 def profile(uname):
     user = User.query.filter_by(username = uname).first()
 
@@ -44,3 +46,14 @@ def update_profile(uname):
         return redirect(url_for('.profile',uname=user.username))
 
     return render_template('profile/update.html',form=form)
+
+@main.route('/user/<uname>/update/pic',methods=['POST'])
+@login_required
+def update_pic(uname):
+    user = User.query.filter_by(username = uname).first()
+    if 'photo' in request.files:
+        filename = photos.save(request.files['photo'])
+        path = f'photos/{filename}'
+        user.profile_pic_path = path
+        db.session.commit()
+    return redirect(url_for('main.profile',uname=uname))

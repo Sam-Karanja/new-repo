@@ -6,6 +6,8 @@ from flask import config
 class Config:
     SQLALCHEMY_DATABASE_URI = 'postgresql+psycopg2://moringa:1234@localhost/blogs'
     SECRET_KEY = 'SECRET_KEY'
+    UPLOADED_PHOTOS_DEST ='app/static/photos'
+
 
     '''
     contains configurations used in bothe development and production stages
