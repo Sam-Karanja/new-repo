@@ -23,7 +23,6 @@ class User(db.Model,UserMixin):
     __tablename__='users'
     id = db.Column(db.Integer,primary_key = True)
     username = db.Column(db.String(255),index=True)
-    role_id = db.Column(db.Integer,db.Foreignkey('roles.id'))
     password_hash = db.Column(db.String(255))
     pass_secure = db.Column(db.String(255))
 
