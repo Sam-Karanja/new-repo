@@ -2,16 +2,15 @@
 {% block content %}
 <div class="container">
     <div class="row">
-        <div class="col-xs-6 col-sm-6 col-mf-6 ">
+        <div class="col-xs-6 col-sm-6 col-md-6 ">
             <div class="card" style="width: 25rem;">
-                <div class="card-body">
+              <div class="card-body">
             <h5 class="card-text"> {{ message }} </h5>
             <p class="card-text"> {{ quotes.quote }} </p>
-            <p> {{quotes.author}} </p>
+            <b> {{quotes.author}} </b>
             </div>
         </div>
         </div>
     </div>
 </div>
-
 {% endblock %}

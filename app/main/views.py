@@ -1,5 +1,3 @@
-from crypt import methods
-from fileinput import filename
 from os import abort
 from flask import render_template,request,redirect,url_for
 from.import main
@@ -11,8 +9,7 @@ from ..import db,photos
 
 
 
-@main.route('/',methods=['GET','POST'])
-@login_required
+@main.route('/',methods = ['GET','POST'])
 def index():
 
     '''
