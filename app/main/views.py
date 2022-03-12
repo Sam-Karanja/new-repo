@@ -17,21 +17,22 @@ def index():
     my_quote=get_quotes()
     post=Post.query.all()
 
+
     message ="Quote for you. You are the best and nobody can change that"
     return render_template('index.html',message=message,quotes=my_quote,post=post)
 
 @main.route('/new_post', methods=['GET','POST'])
-
 def add_post():
     form = PostForm()
-    if form.validate_on_submit():
-        post_blog = form.post_blog.data
-        new_post = Post(post_blog=post_blog,user=current_user)
-        new_post.save_post()
-    return render_template('post.html', form=form)
+    if current_user.is_authenticated and form.validate_on_submit():
+        post = Post(form.post_blog.data,user=current_user._get_current_object())
+        db.session.add(post)
+        return redirect(url_for('main.index'))
+    posts = Post.query.order_by(Post.time_posted.desc()).all()
+        
+    return render_template('post.html', posts=posts, form=form)
 
 @main.route('/user/<uname>')
-@login_required
 def profile(uname):
     user = User.query.filter_by(username = uname).first()
 
@@ -48,7 +49,7 @@ def update_profile(uname):
     form = UpdateProfile()
     if form.validate_on_submit():
         user.bio = form.bio.data
-        db.session.ass(user)
+        db.session.add(user)
         db.session.commit()
         return redirect(url_for('.profile',uname=user.username))
 

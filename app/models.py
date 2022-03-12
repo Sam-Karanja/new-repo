@@ -39,7 +39,7 @@ class User(db.Model,UserMixin):
         self.pass_secure = generate_password_hash(password)
 
     def verify_password(self,password):
-        self.pass_secure = generate_password_hash(password)
+        self.pass_secure = check_password_hash(self.pass_secure,password)
 
 
     def __repr__(self):
@@ -48,8 +48,6 @@ class User(db.Model,UserMixin):
 class Post(db.Model):
     __tablename__ = 'posts'
     id = db.Column(db.Integer,primary_key=True)
-    post_id = db.Column(db.Integer)
-    post_title = db.Column(db.String)
     post_blog = db.Column(db.String)
     time_posted = db.Column(db.DateTime,default=datetime.utcnow)
     user_id = db.Column(db.Integer,db.ForeignKey("users.id"))
