@@ -15,32 +15,30 @@ def index():
     View root page function that returns the index page and its data
     '''
     my_quote=get_quotes()
-    post=Post.query.all()
+    posts=Post.query.all()
     message ="Quote for you. You are the best and nobody can change that"
-    return render_template('index.html',message=message,quotes=my_quote,post=post)
+    return render_template('index.html',message=message,quotes=my_quote,posts=posts)
 
 @main.route('/new_post', methods=['GET', 'POST'])
-def post():
-    
+def new_post():
     form = PostForm()
-    if current_user.is_authenticated and \
-        form.validate_on_submit():
-        post = Post(post_blog=form.post_blog.data,
-        author=current_user._get_current_object())
-        db.session.add(post)
-        return redirect(url_for('.post'))
-    posts = Post.query.order_by(Post.time_posted.desc()).all()
-    return render_template('post.html', form=form, posts=posts)
+    if current_user.is_authenticated:
+        if form.validate_on_submit():
+            post_blog = form.post_blog.data
+            new_post = Post(post_blog=post_blog,user=current_user)
+            new_post.save_post()
+            return redirect(url_for('main.index'))
+    # posts = Post.query.order_by(Post.time_posted.desc()).all()
+    return render_template('post.html', form=form)
 
 
 
-@main.route('/user/<uname>/update')
+@main.route('/user/<uname>')
 @login_required
 def profile(uname):
     user = User.query.filter_by(username = uname).first()
     if user is None:
         abort(404)
-
     return render_template("profile/profile.html",user = user) 
 
 
@@ -57,6 +55,7 @@ def update_profile(uname):
         user.bio(form.bio.data)
         db.session.add(user)
         db.session.commit()
+        return redirect(url_for('.profile',uname=user.username))
     return render_template("profile/update.html", form = form)
 
 @main.route('/user/<uname>/update/pic',methods= ['POST'])

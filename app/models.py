@@ -56,6 +56,9 @@ class Post(db.Model):
         db.session.add(self)
         db.session.commit()
 
+    def __repr__(self):
+        return f'Post{self.post_blog}'
+
     @classmethod
     def get_posts(cls,id):
         posts = Post.query.filter_by(post_id = id).all()
