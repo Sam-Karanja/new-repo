@@ -1,10 +1,11 @@
+from crypt import methods
 from os import abort
 from flask import render_template,request,redirect,url_for
 from.import main
 from..request import get_quotes
-from flask_login import login_required
-from ..models import User
-from .forms import UpdateProfile
+from flask_login import current_user, login_required
+from ..models import Post, User
+from .forms import UpdateProfile,PostForm
 from ..import db,photos
 
 @main.route('/',methods = ['GET','POST'])
@@ -14,11 +15,20 @@ def index():
     View root page function that returns the index page and its data
     '''
     my_quote=get_quotes()
+    post=Post.query.all()
 
     message ="Quote for you. You are the best and nobody can change that"
-    return render_template('index.html',message=message,quotes=my_quote)
+    return render_template('index.html',message=message,quotes=my_quote,post=post)
 
-@main.route()
+@main.route('/new_post', methods=['GET','POST'])
+
+def add_post():
+    form = PostForm()
+    if form.validate_on_submit():
+        post_blog = form.post_blog.data
+        new_post = Post(post_blog=post_blog,user=current_user)
+        new_post.save_post()
+    return render_template('post.html', form=form)
 
 @main.route('/user/<uname>')
 @login_required

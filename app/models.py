@@ -27,7 +27,6 @@ class User(db.Model,UserMixin):
     email = db.Column(db.String(255),unique=True,index=True)
     bio = db.Column(db.String(255))
     profile_path = db.Column(db.String())
-    password_hash = db.Column(db.String(255))
     pass_secure = db.Column(db.String(255))
     posts = db.relationship('Post',backref='user',lazy = "dynamic")
 
@@ -53,7 +52,7 @@ class Post(db.Model):
     post_title = db.Column(db.String)
     post_blog = db.Column(db.String)
     time_posted = db.Column(db.DateTime,default=datetime.utcnow)
-    user_id = db.Column(db.Integer,db.ForeignKey("user.id"))
+    user_id = db.Column(db.Integer,db.ForeignKey("users.id"))
 
     def save_post(self):
         db.session.add(self)
