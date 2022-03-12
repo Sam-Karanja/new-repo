@@ -2,6 +2,7 @@ from .import db
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash,check_password_hash
 from . import login_manager
+from datetime import datetime
 
 '''
 this decorator modifies the load_user funtion by passing user id that queries and 
@@ -28,6 +29,7 @@ class User(db.Model,UserMixin):
     profile_path = db.Column(db.String())
     password_hash = db.Column(db.String(255))
     pass_secure = db.Column(db.String(255))
+    posts = db.relationship('Post',backref='user',lazy = "dynamic")
 
     @property
     def password(self):
@@ -43,3 +45,21 @@ class User(db.Model,UserMixin):
 
     def __repr__(self):
         return f'User{self.username}'
+
+class Post(db.Model):
+    __tablename__ = 'posts'
+    id = db.Column(db.Integer,primary_key=True)
+    post_id = db.Column(db.Integer)
+    post_title = db.Column(db.String)
+    post_blog = db.Column(db.String)
+    time_posted = db.Column(db.DateTime,default=datetime.utcnow)
+    user_id = db.Column(db.Integer,db.ForeignKey("user.id"))
+
+    def save_post(self):
+        db.session.add(self)
+        db.session.commit()
+
+    @classmethod
+    def get_posts(cls,id):
+        posts = Post.query.filter_by(post_id = id).all()
+        return posts

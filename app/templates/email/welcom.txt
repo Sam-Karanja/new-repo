@@ -1,0 +1,3 @@
+Hello {{user.username}}
+Welcome to  Person Blog 
+We are happy to have you as part of our family.

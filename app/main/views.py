@@ -18,6 +18,8 @@ def index():
     message ="Quote for you. You are the best and nobody can change that"
     return render_template('index.html',message=message,quotes=my_quote)
 
+@main.route()
+
 @main.route('/user/<uname>')
 @login_required
 def profile(uname):
