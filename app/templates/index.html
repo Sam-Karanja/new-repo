@@ -12,10 +12,29 @@
             </div>
         </div>
         </div>
-        <div class="col-xs-6 col-sm-6 col-md-6">
-            <h5> my Post </h5>
-            <p> post.post_blog</p>
+       <div>
+            {% if current_user.is_authenticated %}
+            {{ wtf.quick_form(form) }}
+            {% endif %}
         </div>
+        <ul class="posts">
+            {% for post in posts %}
+            <li class="post">
+                <div class="profile-thumbnail">
+                    <a href="{{ url_for('.user', username=post.user.username) }}">
+                        <img class="img-rounded profile-thumbnail"
+                        src="{{ post.user.gravatar(size=40) }}">
+                    </a>
+                </div>
+                <div class="post-date">{{ moment(post.time_posted).fromNow() }}</div>
+                <div class="post-author">
+                    <a href="{{ url_for('.user', username=post.user.username) }}">
+                        {{ post.user.username }}
+                    </a>
+                </div>
+                <div class="post-body">{{ post.post_blog }}</div>
+            </li>
+        {% endfor %}
     </div>
 </div>
 {% endblock %}
