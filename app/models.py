@@ -9,18 +9,15 @@ this decorator modifies the load_user funtion by passing user id that queries an
 gets a user with that Id
 '''
 @login_manager.user_loader
-def user_loader(user_id):
-    return User.query.get(int(user_id))
-
-
+def load_user(id):
+    return User.query.get(int(id))
 
 class Quotes:
-    def __init__(self,author,id,quote):
-        self.id=id
+    def __init__(self,author,quote):
         self.author=author
         self.quote=quote
 
-class User(db.Model,UserMixin):
+class User(UserMixin,db.Model):
     __tablename__='users'
     id = db.Column(db.Integer,primary_key = True)
     username = db.Column(db.String(255),index=True)
@@ -29,6 +26,8 @@ class User(db.Model,UserMixin):
     profile_pic_path = db.Column(db.String())
     pass_secure = db.Column(db.String(255))
     posts = db.relationship('Post',backref='user',lazy = "dynamic")
+    comment= db.relationship('Comment',backref='user',lazy='dynamic')
+
 
     @property
     def password(self):
@@ -39,18 +38,20 @@ class User(db.Model,UserMixin):
         self.pass_secure = generate_password_hash(password)
 
     def verify_password(self,password):
-        self.pass_secure = check_password_hash(self.pass_secure,password)
+       return check_password_hash(self.pass_secure,password)
 
 
     def __repr__(self):
         return f'User{self.username}'
 
+
 class Post(db.Model):
     __tablename__ = 'posts'
     id = db.Column(db.Integer,primary_key=True)
-    post_blog = db.Column(db.String)
+    body = db.Column(db.String)
     time_posted = db.Column(db.DateTime,default=datetime.utcnow)
     user_id = db.Column(db.Integer,db.ForeignKey("users.id"))
+    comments = db.relationship('Comment',backref='Posts',lazy='dynamic')
 
     def save_post(self):
         db.session.add(self)
@@ -59,7 +60,24 @@ class Post(db.Model):
     def __repr__(self):
         return f'Post{self.post_blog}'
 
+
+class Comment(db.Model):
+    __tablename__ = "comments"
+    id = db.Column(db.Integer, primary_key=True)
+    comment = db.Column(db.Text)
+    post_id = db.Column(db.Integer,db.ForeignKey("posts.id"))
+    user_id = db.Column(db.Integer,db.ForeignKey("users.id"))
+
+    def save_comment(self):
+        db.session.add(self)
+        db.session.commit()
+
     @classmethod
-    def get_posts(cls,id):
-        posts = Post.query.filter_by(post_id = id).all()
-        return posts
+    def get_comments(cls,post_id):
+        comments = Comment.query.filter_by(post_id=post_id).all()
+
+        return comments
+
+    
+    def __repr__(self):
+        return f'comment:{self.comment}'

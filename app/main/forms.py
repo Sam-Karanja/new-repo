@@ -10,5 +10,10 @@ class UpdateProfile(FlaskForm):
 class PostForm(FlaskForm):
     '''
     '''
-    post_blog = TextAreaField("input your personal blog here",validators=[DataRequired()])
-    submit= SubmitField("save")
+    body = TextAreaField("input your personal blog here",validators=[DataRequired()])
+    submit= SubmitField("Submit")
+
+class CommentForm(FlaskForm):
+    
+    comment = TextAreaField('Add a comment',validators=[DataRequired()])
+    submit = SubmitField('Comment')

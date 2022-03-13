@@ -1,11 +1,11 @@
 from crypt import methods
 from os import abort
-from flask import render_template,request,redirect,url_for
+from flask import render_template,request,redirect,url_for,session
 from.import main
 from..request import get_quotes
 from flask_login import current_user, login_required
-from ..models import Post, Quotes, User
-from .forms import UpdateProfile,PostForm
+from ..models import Post, Quotes, User,Comment
+from .forms import UpdateProfile,PostForm,CommentForm
 from ..import db,photos
 
 @main.route('/',methods = ['GET','POST'])
@@ -20,21 +20,33 @@ def index():
     return render_template('index.html',message=message,quotes=my_quote,posts=posts)
 
 @main.route('/new_post', methods=['GET', 'POST'])
+@login_required
 def new_post():
     form = PostForm()
-    if current_user.is_authenticated:
-        if form.validate_on_submit():
-            post_blog = form.post_blog.data
-            new_post = Post(post_blog=post_blog,user=current_user)
-            new_post.save_post()
+    if form.validate_on_submit():
+            post = Post(body=form.body.data,user_id=current_user.id)
+            post.save_post()
             return redirect(url_for('main.index'))
-    # posts = Post.query.order_by(Post.time_posted.desc()).all()
-    return render_template('post.html', form=form)
+    posts = Post.query.order_by(Post.time_posted.desc()).all()
+    return render_template('post.html', form=form,posts=posts)
 
+@main.route('/comment/<int:post_id>', methods = ['POST','GET'])
+@login_required
+def comment(post_id):
+    form = CommentForm()
+    post = Post.query.get(post_id)
+    comments = Comment.query.filter_by(post_id = post).all()
+    if form.validate_on_submit():
+        comment = form.comment.data 
+        post_id = post_id
+        new_comment = Comment(comment = comment,post_id = post_id,user=current_user)
+        new_comment.save_comment()
+        return redirect(url_for('.comment', post_id = post_id))
+    
+    return render_template('comment.html', form =form, post = post,comments=comments)
 
 
 @main.route('/user/<uname>')
-@login_required
 def profile(uname):
     user = User.query.filter_by(username = uname).first()
     if user is None:

@@ -1,0 +1,33 @@
+{% extends 'base.html'%}
+{% import 'bootstrap/wtf.html' as wtf %}
+{% block styles%}
+{{ super() }}
+<link rel="stylesheet" href="{{url_for('static',filename='css/style.css')}}">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        {% if comments %}
+        <div class="col-md-4">
+            <h4 class="text-center">
+                comments for ths post
+            </h4>
+            {% for comment in comments %}
+            <div class="card">
+                <div class="card-body">
+                    {{comments.comment}}
+                    <p>{{ comment.user.username}} </p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {{ wtf.quick_form(form)}}
+    </div>
+    {% else %}
+    <div>
+        {{comments for this post}}
+    </div>
+{% endif %}
+</div>
+{% endblock %}

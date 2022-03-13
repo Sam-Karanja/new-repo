@@ -3,37 +3,21 @@
 {% block content %}
 <div class="container">
     <div class="row">
-        <div class="col-xs-6 col-sm-6 col-md-6 ">
-            <div class="card" style="width: 25rem;">
-              <div class="card-body">
-            <h5 class="card-text"> {{ message }} </h5>
-            <p class="card-text"> {{ quotes.quote }} </p>
-            <b> {{quotes.author}} </b>
-            </div>
+        <div class="col-md-3">
+            <h3>Randon Quotes for you</h3>
+            <h5 class="card-text"> {{ quotes.quote }} </h5>
+           <b> {{quotes.author}} </b>
         </div>
-        </div>
-       <div>
-            {% if current_user.is_authenticated %}
-            {{ wtf.quick_form(form) }}
-            {% endif %}
-        </div>
-        <ul class="posts">
+        <div class="col-md-6">
             {% for post in posts %}
-            <li class="post">
-                <div class="profile-thumbnail">
-                    <a href="{{ url_for('.user', username=post.user.username) }}">
-                        <img class="img-rounded profile-thumbnail"
-                        src="{{ post.user.gravatar(size=40) }}">
-                    </a>
-                </div>
-                <div class="post-date">{{ moment(post.time_posted).fromNow() }}</div>
+                  <div class="post-body">{{ post.body }}</div>
                 <div class="post-author">
-                    <a href="{{ url_for('.user', username=post.user.username) }}">
+                    <a href="{{ url_for('main.profile', uname=post.username) }}">
                         {{ post.user.username }}
                     </a>
                 </div>
-                <div class="post-body">{{ post.post_blog }}</div>
-            </li>
+           
+        </div>
         {% endfor %}
     </div>
 </div>

@@ -11,11 +11,11 @@ def get_quotes():
     get_quotes_response = json.loads(get_quotes_data.read())
     new_quote = None
     if get_quotes_response:
-       id= get_quotes_response.get('id')
+      
        author = get_quotes_response.get('author')
        quote= get_quotes_response.get('quote')
 
-    new_quote = Quotes(author,id,quote)
+    new_quote = Quotes(author,quote)
 
     return new_quote
 
