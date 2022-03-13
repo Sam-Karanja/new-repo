@@ -11,15 +11,17 @@
 {% block content %}
 <div class="container">
     <div class="row">
-        <div class="col-md-1"></div>
-        <div class="col-md-3 mt-3 quote">
+        <div class="card">
+        <div class="col-md-3 ">
             <div class="content-section">
             <h3>Randon Quotes for you</h3>
             <h5 class="card-text"> {{ quotes.quote }} </h5>
            <b> {{quotes.author}} </b>
            </div>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-6 border-radius:1px">
+            <h4 class="text-center">Personal Blogs</h4>
+            <hr class="bg-primary">
             {% for post in posts %}
                       <div class="card">
                           <div class="post-body">
@@ -32,14 +34,17 @@
                 <div class="post-author">
                     <a href="{{ url_for('main.profile', uname=current_user.username) }}">view my profile</a>
                 </div>
-                <div class="comment">
+                <div class="card-body">
                <a class="btn btn-info btn-sm" href=" {{url_for('main.comment',post_id=post.id)}} ">Comment</a>
+               <span>
                  <form action="{{url_for('main.delete_post',post_id=post.id)}}" method="POST">
                <input class="btn btn-danger btn-sm" type="submit" value="delete">
                </form>
+               </span>
             </div>
-           <hr>
+           <hr class="bg-primary">
             {% endfor %}
+        </div>
         </div>
 </div>
 </div>
