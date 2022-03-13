@@ -1,0 +1,11 @@
+<link rel="stylesheet" href="{{url_for('static',filename='css/style.css')}}">
+{% macro display(comments) %}
+
+<div class="container">
+    {% if comments %}
+    {% for comment in comments %}
+    <span> comment.comment </span>
+    {% endfor %}
+    {% endif %}
+</div>
+{%endmacro%}
