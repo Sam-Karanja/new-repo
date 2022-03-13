@@ -8,26 +8,10 @@
 {% block content %}
 <div class="container">
     <div class="row">
-        {% if comments %}
         <div class="col-md-4">
-            <h4 class="text-center">
-                comments for ths post
-            </h4>
-            {% for comment in comments %}
-            <div class="card">
-                <div class="card-body">
-                    {{comments.comment}}
-                    <p>{{ comment.user.username}} </p>
-                </div>
-            </div>
-            {% endfor %}
+            {{ wtf.quick_form(form)}}
         </div>
-        {{ wtf.quick_form(form)}}
     </div>
-    {% else %}
-    <div>
-        {{comments for this post}}
-    </div>
-{% endif %}
 </div>
+
 {% endblock %}

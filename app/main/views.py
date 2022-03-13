@@ -1,10 +1,9 @@
-from crypt import methods
 from os import abort
 from flask import render_template,request,redirect,url_for,session
 from.import main
 from..request import get_quotes
 from flask_login import current_user, login_required
-from ..models import Post, Quotes, User,Comment
+from ..models import Post, User,Comment
 from .forms import UpdateProfile,PostForm,CommentForm
 from ..import db,photos
 
@@ -16,8 +15,9 @@ def index():
     '''
     my_quote=get_quotes()
     posts=Post.query.all()
+    comments=Comment.query.all()
     message ="Quote for you. You are the best and nobody can change that"
-    return render_template('index.html',message=message,quotes=my_quote,posts=posts)
+    return render_template('index.html',message=message,quotes=my_quote,posts=posts,comments=comments)
 
 @main.route('/new_post', methods=['GET', 'POST'])
 @login_required
@@ -30,20 +30,16 @@ def new_post():
     posts = Post.query.order_by(Post.time_posted.desc()).all()
     return render_template('post.html', form=form,posts=posts)
 
-@main.route('/comment/<int:post_id>', methods = ['POST','GET'])
+@main.route('/comment/<post_id>', methods = ['POST','GET'])
 @login_required
 def comment(post_id):
     form = CommentForm()
-    post = Post.query.get(post_id)
-    comments = Comment.query.filter_by(post_id = post).all()
     if form.validate_on_submit():
-        comment = form.comment.data 
-        post_id = post_id
-        new_comment = Comment(comment = comment,post_id = post_id,user=current_user)
-        new_comment.save_comment()
+        comment = Comment(comment=form.comment.data,user_id=current_user.id)
+        comment.save_comment()
         return redirect(url_for('.comment', post_id = post_id))
-    
-    return render_template('comment.html', form =form, post = post,comments=comments)
+    comments =  comments = Comment.query.filter_by(post_id=post_id).all()
+    return render_template('comment.html', form =form,comments=comments)
 
 
 @main.route('/user/<uname>')

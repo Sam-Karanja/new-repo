@@ -10,15 +10,43 @@
         </div>
         <div class="col-md-6">
             {% for post in posts %}
-                  <div class="post-body">{{ post.body }}</div>
+                      <div class="card">
+                          <div class="post-body">
+                          <div class="card-body">
+                              {{ post.body }} <p>Posted by</p>
+                               <b>{{ post.user.username }} on: {{post.time_posted.strftime('%Y-%m-%d')}} </b> 
+                          </div>
+                      </div>
+                    </div>
                 <div class="post-author">
-                    <a href="{{ url_for('main.profile', uname=post.username) }}">
-                        {{ post.user.username }}
-                    </a>
+                    <a href="{{ url_for('main.profile', uname=current_user.username) }}">view my profile</a>
                 </div>
-           
+           <span>
+               <a class="btn btn-info btn-sm" href=" {{url_for('main.comment',post_id=post.id)}} ">Comment</a>
+           </span>
+            <span>
+               <a class="btn btn-info btn-sm btn-danger" href=" {{url_for('main.comment',post_id=post.id)}} ">Delete</a>
+           </span>
+           <hr>
+            {% endfor %}
         </div>
-        {% endfor %}
+
+        {% for comments in comment %}
+        <div class="col-md-3">
+        <div class="card" style="width: 18rem;">
+        <div class="card-body">
+            <h5 class="card-title"> {{comment.comment}} </h5>
+            <h6 class="card-subtitle mb-2 text-muted"> {{current_user.username}} </h6>
+            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+            <a href="#" class="card-link">Delete</a>
+            <a href="#" class="card-link">subscribe</a>
+        </div>
+        </div>
+       
     </div>
+    {% endfor %}
+
+ 
+</div>
 </div>
 {% endblock %}

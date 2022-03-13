@@ -58,7 +58,7 @@ class Post(db.Model):
         db.session.commit()
 
     def __repr__(self):
-        return f'Post{self.post_blog}'
+        return f'Post{self.body}'
 
 
 class Comment(db.Model):
