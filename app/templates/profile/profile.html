@@ -7,9 +7,9 @@
 <div class="container">
   <div class="row">
     <h5 class="title">My Profile</h5>
-       <div class="col-md-4">
+    <div class="col-md-4">
       {% if user.profile_pic_path %}
-      <img src="{{url_for('static',filename=user.profile_pic_path)}}" alt=""class="img-thumbnail rounded-circle profile-photo">
+      <img src="{{url_for('static',filename=user.profile_pic_path)}}" alt=""class="img-thumbnail rounded-circle ">
       {%else%}
       <p>No profile picture</p>
       {% endif %}
@@ -37,13 +37,14 @@
 <div class="col-md-4">
   <h6 class="title"> My Posts</h6>
   {% if user == current_user%}
-  {% if posts %}
-  {{post.body}}
+  {% for post in posts %}
+  <h6>{{post.body}}</h6>
+     <a href=" {{url_for('main.delete_post',post_id=post.id)}} "> delete blog</a>
   {%else%}
   <div class="content-section">
     You have no Posts
   </div>
-  {%endif%}
+  {%endfor%}
   {%endif%}
 </div>
 </div>

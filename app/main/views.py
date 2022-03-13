@@ -35,21 +35,25 @@ def new_post():
 @login_required
 def comment(post_id):
     form = CommentForm()
+    post = Post.query.get(post_id)
+    comments = Comment.query.filter_by(post_id=post_id).all()
     if form.validate_on_submit():
-        comment = Comment(comment=form.comment.data,user_id=current_user.id)
-        comment.save_comment()
+        post_id=post_id
+        new_comment = Comment(comment=form.comment.data,user_id=current_user.id,post_id=post_id)
+        new_comment.save_comment()
         return redirect(url_for('.comment', post_id = post_id))
-    comments =  comments = Comment.query.filter_by(post_id=post_id).all()
-    return render_template('comment.html', form =form,comments=comments)
+    
+    return render_template('comment.html', post=post,form =form,comments=comments)
 
 
 @main.route('/user/<uname>')
 @login_required
 def profile(uname):
     user = User.query.filter_by(username = uname).first()
+    posts =Post.query.filter_by(user = current_user).all()
     if user is None:
         abort(404)
-    return render_template("profile/profile.html",user = user) 
+    return render_template("profile/profile.html",user = user,posts=posts) 
 
 
 @main.route('/user/<uname>/update',methods = ['GET','POST'])
@@ -78,7 +82,8 @@ def update_pic(uname):
         user.profile_pic_path = path
         db.session.commit()
     return redirect(url_for('main.profile',uname=uname))
-@main.route('/delete_post/<post_id>',methods =['POST'])
+
+@main.route('/delete_post/<post_id>')
 @login_required
 def delete_post(post_id):
     post_delete = Post.query.get(post_id)
@@ -86,3 +91,12 @@ def delete_post(post_id):
     db.session.commit()
     flash('Blog has been deleted')
     return redirect(url_for('main.index',post_id=post_id))
+
+@main.route('/delete_comment/<comment_id>',methods = ['POST'])
+@login_required
+def delete_comment(comment_id):
+    delete_comment = Comment.query.get(comment_id)
+    db.session.delete(delete_comment)
+    db.session.commit()
+    flash("Comment deleted")
+    return redirect(url_for('main.index',comment_id = comment_id))
