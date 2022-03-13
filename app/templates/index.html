@@ -1,51 +1,57 @@
-{% extends 'base.html' %}
-{% import 'bootstrap/wtf.html' as wtf %}
-{% import 'macros.html' as macro %}
-
-{% block styles%}
-    {{ super() }}
-    <link rel="stylesheet" href="{{url_for('static',filename='css/index.css')}}">
-     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+{% extends 'base.html' %} {% import 'bootstrap/wtf.html' as wtf %} {% import
+'macros.html' as macro %} {% block styles%} {{ super() }}
+<link rel="stylesheet" href="index.css" />
+<link rel="stylesheet" href="{{url_for('static',filename='css/index.css')}}" />
+<script
+  src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+  integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+  crossorigin="anonymous"
+></script>
 {% endblock %}
-
 {% block content %}
 <div class="container">
-    <div class="row">
-        <div class="card">
-        <div class="col-md-3 ">
-            <div class="content-section">
-            <h3>Randon Quotes for you</h3>
-            <h5 class="card-text"> {{ quotes.quote }} </h5>
-           <b> {{quotes.author}} </b>
-           </div>
+  <div class="row">
+    <h5 class="text-center" style="font-weight: bold;">Personal Blogs <br> Leave a comment or add a post</h5>
+    <hr class="bg-primary" />
+
+    <div class="col-md-6">
+      <div class="thumbnail" style="border-radius: 1px;">
+        <b style="color: brown;">Randon Quotes for you</b>
+        <h5 class="card-text">{{ quotes.quote }}</h5>
+        <b> by: {{quotes.author}} </b>
+      </div>
+    </div>
+    {% for post in posts %}
+    <div class="col-md-6">
+      <div class="thumbnail">
+        <div class="caption">
+          {{ post.body }}
+          <p>Posted by</p>
+          <b
+            >{{ post.user.username }} on:
+            {{post.time_posted.strftime('%Y-%m-%d')}}
+          </b>
+          <br>
+          <a href="{{ url_for('main.profile', uname=current_user.username) }}"
+            >view my profile</a
+          >
+          <a
+            class="btn btn-info btn-sm"
+            href=" {{url_for('main.comment',post_id=post.id)}} "
+            >Comment</a
+          >
+          <a
+            href="{{url_for('main.delete_post',post_id=post.id)}}"
+            method="POST"
+          >
+            <input class="btn btn-danger btn-sm" type="submit" value="delete" />
+          </a>
+          <a class="btn btn-info btn-sm" href="">Subscribe</a>
         </div>
-        <div class="col-md-6 border-radius:1px">
-            <h4 class="text-center">Personal Blogs</h4>
-            <hr class="bg-primary">
-            {% for post in posts %}
-                      <div class="card">
-                          <div class="post-body">
-                          <div class="card-body">
-                              {{ post.body }} <p>Posted by</p>
-                               <b>{{ post.user.username }} on: {{post.time_posted.strftime('%Y-%m-%d')}} </b> 
-                          </div>
-                      </div>
-                    </div>
-                <div class="post-author">
-                    <a href="{{ url_for('main.profile', uname=current_user.username) }}">view my profile</a>
-                </div>
-                <div class="card-body">
-               <a class="btn btn-info btn-sm" href=" {{url_for('main.comment',post_id=post.id)}} ">Comment</a>
-               <span>
-                 <form action="{{url_for('main.delete_post',post_id=post.id)}}" method="POST">
-               <input class="btn btn-danger btn-sm" type="submit" value="delete">
-               </form>
-               </span>
-            </div>
-           <hr class="bg-primary">
-            {% endfor %}
-        </div>
-        </div>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
 </div>
-</div>
+
 {% endblock %}
