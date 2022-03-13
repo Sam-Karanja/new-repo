@@ -19,34 +19,35 @@
       </div>
     </div>
     <div class="col-md-4">
-    {% if user.bio %}
-    <p> {{user.bio}} </p>
-    {%else%}
-    <p> {{user.username}} has no bio</p>
-    {%endif%}
-    {% if user == current_user %}
-    <a href=" {{url_for ('main.update_pic',uname=uname)}} "> Update Bio</a>
-    <form class="mt-4" action="{{url_for('main.update_pic',uname=user.username)}}" method="post"enctype="multipart/form-data">
-      <p class="title ">Update Profile photo</p>
-      <input type="file" name="photo" class="form-control" required><br>
-      <input type="submit" class="btn btn-sm btn-info" value="Update">
-    </form>
-    {% endif %}
+      {% if user.bio %}
+      <p> {{user.bio}} </p>
+      {%else%}
+      <p> {{user.username}} has no bio</p>
+      {%endif%}
+      {% if user == current_user %}
+      <a href=" {{url_for ('main.update_pic',uname=uname)}} "> Update Bio</a>
+      <form class="mt-4" action="{{url_for('main.update_pic',uname=user.username)}}" method="post"enctype="multipart/form-data">
+        <p class="title ">Update Profile photo</p>
+        <input type="file" name="photo" class="form-control" required><br>
+        <input type="submit" class="btn btn-sm btn-info" value="Update">
+      </form>
+      {% endif %}
+    </div>
+    <div class="col-md-1"></div>
+    <div class="col-md-4">
+      <h6 class="title"> My Posts</h6>
+      {% if user == current_user%}
+      {% for post in posts %}
+      <h6>{{post.body}}</h6>
+      <a href=" {{url_for('main.delete_post',post_id=post.id)}} "> delete blog</a>
+      {%else%}
+      <div class="content-section">
+        You have no Posts
+      </div>
+      {%endfor%}
+      {%endif%}
+    </div>
   </div>
-<div class="col-md-1"></div>
-<div class="col-md-4">
-  <h6 class="title"> My Posts</h6>
-  {% if user == current_user%}
-  {% for post in posts %}
-  <h6>{{post.body}}</h6>
-     <a href=" {{url_for('main.delete_post',post_id=post.id)}} "> delete blog</a>
-  {%else%}
-  <div class="content-section">
-    You have no Posts
-  </div>
-  {%endfor%}
-  {%endif%}
-</div>
-</div>
 </div>
 {% endblock %}
+
