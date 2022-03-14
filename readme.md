@@ -10,7 +10,7 @@
 
 ****
 ## Description
-Application that helps one Use one minute of their time to explain n somthing to impress someone. The site allows one to add a pitch comment on other people pitches add profile and vote for pitches.
+Application that displays a random quote, it alos allow one to post a blog concerning something the user can delete a blog or a comment they find insulting. they can alson view thiei posts on profile page.
 
 ## Live link
 https://my-personalblog.herokuapp.com/
