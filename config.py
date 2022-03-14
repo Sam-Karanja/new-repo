@@ -1,6 +1,4 @@
 import os
-from pickle import FALSE
-
 from flask import config
 
 
