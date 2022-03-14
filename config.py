@@ -18,8 +18,8 @@ class Config:
 
 
 class ProdConfig(Config):
-    #  SQLALCHEMY_DATABASE_URI = os.environ.get("DATABASE_URL")
-     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL').replace("://", "ql://", 1)
+      SQLALCHEMY_DATABASE_URI = os.environ.get("DATABASE_URL")
+    #  SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL').replace("://", "ql://", 1)
   
    
 class TestConfig(Config):
@@ -33,7 +33,7 @@ class DevConfig(Config):
     '''
     
     '''
-    DEBUG = False
+    DEBUG = True
 
 config_options = {
     'development':DevConfig,
